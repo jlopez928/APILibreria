@@ -1,4 +1,4 @@
-const libro = require('../models/libro')
+const Libro = require('../models/libro')
 
 function getLibro(req, res) {
 	let libroId = req.params.libroId
@@ -15,9 +15,9 @@ function getLibros(req, res) {
 	Libro.find({}, (err, libros) => {
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
 		if (!libros) return res.status(404).send({message: 'No existen libros'})
-
-		res.status(200).send({ libros });
-	})
+		res.status(200).send({ libros })
+	}).populate('temas').populate('autors').populate('editorials')
+	
 }
 
 function updateLibro(req, res) {
@@ -48,7 +48,7 @@ function saveLibro(req, res) {
 	console.log('POST /api/libro')
 	console.log(req.body)
 
-	let libro = new libro()
+	let libro = new Libro()
 
 	libro.titulo = req.body.titulo
 	libro.autors = req.body.autors
